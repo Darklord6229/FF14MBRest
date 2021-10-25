@@ -2,6 +2,7 @@ package com.ff14mbrest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,9 @@ public class ItemController {
 
 //With this mapping a list of items can be sent to it and a JSON response is given with all recipe ids
 //and potential matches are returned
-    @GetMapping("/itemsWanted")
+@CrossOrigin(origins = "http://localhost:3000/")
+@GetMapping("/itemsWanted")
     public ArrayList item(@RequestParam(value="name", defaultValue = "Iron") String name) throws InterruptedException {
-
         //splitting incoming items into an array and initalizing variables
         String[] itemsWanted = name.split(",");
         WebClient client = WebClient.create();
@@ -54,7 +55,6 @@ public class ItemController {
             //adding complete item to array list
             items.add(item);
         }
-
         return items;
     }
 }
