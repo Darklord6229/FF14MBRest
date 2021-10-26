@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-public class ItemController {
+public class ItemsWantedController {
 
 //With this mapping a list of items can be sent to it and a JSON response is given with all recipe ids
 //and potential matches are returned
