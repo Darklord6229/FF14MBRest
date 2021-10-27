@@ -17,7 +17,7 @@ public class RecipeLookupController {
 
     @CrossOrigin(origins = "http://localhost:3000/")
     @GetMapping("/recipeWanted")
-    public JSONObject recipeWanted(@RequestParam(value="recID", defaultValue = "1") String recID) throws InterruptedException {
+    public Recipe recipeWanted(@RequestParam(value="recID", defaultValue = "1") String recID) throws InterruptedException {
         WebClient client = WebClient.create();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -27,10 +27,22 @@ public class RecipeLookupController {
         String responseBody = responseSpec.bodyToMono(String.class).block();
         JSONObject responseJSON = new JSONObject(responseBody);
 
-        //Recipe recipe = new Recipe();
-        System.out.println(responseJSON);
+        JSONObject itemResult = responseJSON.getJSONObject("ItemResult");
+        Recipe recipe = new Recipe(itemResult.getInt("ID"),responseJSON.getInt("AmountResult"),itemResult.getString("Name"));
 
+        for(int x = 0; x < 9; x++){
 
-        return responseJSON;
+            if(responseJSON.getJSONObject("ItemIngredient"+x).isNull("ID")){
+                continue;
+            }
+
+            Integer itemID = responseJSON.getJSONObject("ItemIngredient"+x).getInt("ID");
+            Integer itemAmount = responseJSON.getInt("AmountIngredient"+x);
+            String itemName = responseJSON.getJSONObject("ItemIngredient"+x).getString("Name");
+
+            recipe.addIngredient(x,itemID,itemAmount,itemName);
+        }
+
+        return recipe;
     }
 }
